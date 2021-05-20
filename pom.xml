@@ -13,10 +13,19 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<name>api</name>
 	<description>Demo project for petstore automated tests</description>
+
 	<properties>
 		<java.version>11</java.version>
-		<kotlin.version>1.4.32</kotlin.version>
+		<kotlin.version>1.5.0</kotlin.version>
+
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+		<ignoreFailureInStories>true</ignoreFailureInStories>
+		<jbehave.skip.tests>false</jbehave.skip.tests>
+		<meta.filter>!skip</meta.filter>
+		<kotlin.compiler.incremental>true</kotlin.compiler.incremental>
 	</properties>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -29,6 +38,7 @@
 		<dependency>
 			<groupId>org.jetbrains.kotlin</groupId>
 			<artifactId>kotlin-stdlib-jdk8</artifactId>
+			<version>${kotlin.version}</version>
 		</dependency>
 
 		<dependency>
@@ -56,7 +66,6 @@
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>4.12</version>
-			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>log4j</groupId>
@@ -73,7 +82,18 @@
 	<build>
 		<sourceDirectory>${project.basedir}/src/main/kotlin</sourceDirectory>
 		<testSourceDirectory>${project.basedir}/src/test/kotlin</testSourceDirectory>
+		<pluginManagement>
 		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.21.0</version>
+				<configuration>
+					<includes>
+						<include>**/AllStories.kt</include>
+					</includes>
+				</configuration>
+			</plugin>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
@@ -89,23 +109,213 @@
 			<plugin>
 				<groupId>org.jetbrains.kotlin</groupId>
 				<artifactId>kotlin-maven-plugin</artifactId>
+				<version>1.4.32</version>
+				<executions>
+					<execution>
+						<id>unpack-view-resources</id>
+						<phase>pre-integration-test</phase>
+					</execution>
+					<execution>
+						<id>run-stories-as-embeddables</id>
+						<phase>install</phase>
+						<configuration>
+							<scope>test</scope>
+							<storyTimeoutInSecs>14400</storyTimeoutInSecs>
+
+							<includes>
+								<include>**/AllStories.kt</include>
+							</includes>
+							<ignoreFailureInStories>false</ignoreFailureInStories>
+							<ignoreFailureInView>false</ignoreFailureInView>
+							<verboseFailures>true</verboseFailures>
+							<verboseFiltering>false</verboseFiltering>
+
+							<skip>${jbehave.skip.tests}</skip>
+							<metaFilters>
+								<metaFilter>${meta.filter}</metaFilter>
+							</metaFilters>
+							<systemProperties>
+								<property>
+									<name>file.encoding</name>
+									<value>${project.build.sourceEncoding}</value>
+								</property>
+							</systemProperties>
+							<ignoreFailureInStories>${ignoreFailureInStories}</ignoreFailureInStories>
+							<ignoreFailureInView>false</ignoreFailureInView>
+							<verboseFailures>true</verboseFailures>
+							<verboseFiltering>false</verboseFiltering>
+
+						</configuration>
+					</execution>
+					<execution>
+						<id>compile</id>
+						<goals>
+							<goal>compile</goal>
+						</goals>
+						<configuration>
+							<sourceDirs>
+								<sourceDir>${project.basedir}/src/main/kotlin</sourceDir>
+							</sourceDirs>
+						</configuration>
+					</execution>
+
+					<execution>
+						<id>test-compile</id>
+						<goals>
+							<goal>test-compile</goal>
+						</goals>
+						<configuration>
+							<sourceDirs>
+								<sourceDir>${project.basedir}/src/main/kotlin</sourceDir>
+							</sourceDirs>
+						</configuration>
+					</execution>
+				</executions>
 				<configuration>
+					<nowarn>true</nowarn>  <!-- Disable warnings -->
 					<args>
-						<arg>-Xjsr305=strict</arg>
+						<arg>-Xjsr305=strict</arg> <!-- Enable strict mode for JSR-305 annotations -->
 					</args>
-					<compilerPlugins>
-						<plugin>spring</plugin>
-					</compilerPlugins>
+					<jvmTarget>${java.version}</jvmTarget>
 				</configuration>
 				<dependencies>
 					<dependency>
 						<groupId>org.jetbrains.kotlin</groupId>
 						<artifactId>kotlin-maven-allopen</artifactId>
-						<version>${kotlin.version}</version>
+						<version>1.4.32</version>
+					</dependency>
+				</dependencies>
+			</plugin>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.5.1</version>
+				<configuration>
+					<source>${java.version}</source>
+					<target>${java.version}</target>
+				</configuration>
+				<executions>
+					<execution>
+						<id>default-compile</id>
+						<phase>none</phase>
+					</execution>
+					<execution>
+						<id>default-testCompile</id>
+						<phase>none</phase>
+					</execution>
+					<execution>
+						<id>java-compile</id>
+						<phase>compile</phase>
+						<goals>
+							<goal>compile</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>java-test-compile</id>
+						<phase>test-compile</phase>
+						<goals>
+							<goal>testCompile</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>2.6</version>
+				<configuration>
+					<archive>
+						<manifest>
+							<addClasspath>true</addClasspath>
+							<mainClass>AllStories.kt</mainClass>
+						</manifest>
+					</archive>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-failsafe-plugin</artifactId>
+				<version>2.22.2</version>
+				<executions>
+					<execution>
+						<id>integration-test</id>
+						<goals>
+							<goal>integration-test</goal>
+							<goal>verify</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<includes>
+						<include>**/AllStories.kt</include>
+					</includes>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.jbehave</groupId>
+				<artifactId>jbehave-maven-plugin</artifactId>
+				<version>4.8.3</version>
+				<executions>
+					<execution>
+						<id>unpack-view-resources</id>
+						<phase>pre-integration-test</phase>
+						<goals>
+							<goal>unpack-view-resources</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>run-stories-as-embeddables</id>
+						<phase>integration-test</phase>
+						<configuration>
+							<goals>
+								<goal>run-stories-as-embeddables</goal>
+							</goals>
+							<scope>test</scope>
+							<storyTimeoutInSecs>14400</storyTimeoutInSecs>
+
+							<includes>
+								<include>**/AllStories.kt</include>
+							</includes>
+							<ignoreFailureInStories>false</ignoreFailureInStories>
+							<ignoreFailureInView>false</ignoreFailureInView>
+							<verboseFailures>true</verboseFailures>
+							<verboseFiltering>false</verboseFiltering>
+
+							<skip>${jbehave.skip.tests}</skip>
+							<metaFilters>
+								<metaFilter>${meta.filter}</metaFilter>
+							</metaFilters>
+							<systemProperties>
+								<property>
+									<name>file.encoding</name>
+									<value>${project.build.sourceEncoding}</value>
+								</property>
+							</systemProperties>
+							<ignoreFailureInStories>${ignoreFailureInStories}</ignoreFailureInStories>
+							<ignoreFailureInView>false</ignoreFailureInView>
+							<verboseFailures>true</verboseFailures>
+							<verboseFiltering>false</verboseFiltering>
+
+						</configuration>
+					</execution>
+				</executions>
+				<dependencies>
+					<dependency>
+						<groupId>org.codehaus.groovy</groupId>
+						<artifactId>groovy-all</artifactId>
+						<version>2.4.15</version>
+					</dependency>
+					<dependency>
+						<groupId>log4j</groupId>
+						<artifactId>log4j</artifactId>
+						<version>1.2.17</version>
+						<scope>compile</scope>
 					</dependency>
 				</dependencies>
 			</plugin>
 		</plugins>
+		</pluginManagement>
 	</build>
 
 </project>
