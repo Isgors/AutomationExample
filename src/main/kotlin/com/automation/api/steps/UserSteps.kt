@@ -12,7 +12,7 @@ class UserSteps : Steps() {
 
     @Given("a user is created with \$name name")
     fun createUser(name: String) {
-        logger.info("Name is $name")
+        logger.info("User name is $name")
     }
 
 

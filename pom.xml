@@ -8,6 +8,7 @@
 		<version>2.4.5</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
+
 	<groupId>com.automation</groupId>
 	<artifactId>api</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
@@ -23,7 +24,6 @@
 		<ignoreFailureInStories>true</ignoreFailureInStories>
 		<jbehave.skip.tests>false</jbehave.skip.tests>
 		<meta.filter>!skip</meta.filter>
-		<kotlin.compiler.incremental>true</kotlin.compiler.incremental>
 	</properties>
 
 	<dependencies>
@@ -57,12 +57,6 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.jbehave</groupId>
-			<artifactId>jbehave</artifactId>
-			<version>4.8.3</version>
-			<type>pom</type>
-		</dependency>
-		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>4.12</version>
@@ -77,6 +71,12 @@
 			<artifactId>jbehave-core</artifactId>
 			<version>4.1</version>
 		</dependency>
+		<dependency>
+			<groupId>SwaggerPetstoreLib</groupId>
+			<artifactId>swagger-petstore-lib</artifactId>
+			<version>1.0.5</version>
+			<scope>compile</scope>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -84,16 +84,6 @@
 		<testSourceDirectory>${project.basedir}/src/test/kotlin</testSourceDirectory>
 		<pluginManagement>
 		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.21.0</version>
-				<configuration>
-					<includes>
-						<include>**/AllStories.kt</include>
-					</includes>
-				</configuration>
-			</plugin>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
@@ -112,63 +102,18 @@
 				<version>1.4.32</version>
 				<executions>
 					<execution>
-						<id>unpack-view-resources</id>
-						<phase>pre-integration-test</phase>
-					</execution>
-					<execution>
-						<id>run-stories-as-embeddables</id>
-						<phase>install</phase>
-						<configuration>
-							<scope>test</scope>
-							<storyTimeoutInSecs>14400</storyTimeoutInSecs>
-
-							<includes>
-								<include>**/AllStories.kt</include>
-							</includes>
-							<ignoreFailureInStories>false</ignoreFailureInStories>
-							<ignoreFailureInView>false</ignoreFailureInView>
-							<verboseFailures>true</verboseFailures>
-							<verboseFiltering>false</verboseFiltering>
-
-							<skip>${jbehave.skip.tests}</skip>
-							<metaFilters>
-								<metaFilter>${meta.filter}</metaFilter>
-							</metaFilters>
-							<systemProperties>
-								<property>
-									<name>file.encoding</name>
-									<value>${project.build.sourceEncoding}</value>
-								</property>
-							</systemProperties>
-							<ignoreFailureInStories>${ignoreFailureInStories}</ignoreFailureInStories>
-							<ignoreFailureInView>false</ignoreFailureInView>
-							<verboseFailures>true</verboseFailures>
-							<verboseFiltering>false</verboseFiltering>
-
-						</configuration>
-					</execution>
-					<execution>
 						<id>compile</id>
+						<phase>process-sources</phase>
 						<goals>
 							<goal>compile</goal>
 						</goals>
-						<configuration>
-							<sourceDirs>
-								<sourceDir>${project.basedir}/src/main/kotlin</sourceDir>
-							</sourceDirs>
-						</configuration>
 					</execution>
-
 					<execution>
 						<id>test-compile</id>
+						<phase>test-compile</phase>
 						<goals>
 							<goal>test-compile</goal>
 						</goals>
-						<configuration>
-							<sourceDirs>
-								<sourceDir>${project.basedir}/src/main/kotlin</sourceDir>
-							</sourceDirs>
-						</configuration>
 					</execution>
 				</executions>
 				<configuration>
@@ -218,20 +163,18 @@
 					</execution>
 				</executions>
 			</plugin>
+		</plugins>
+		</pluginManagement>
+		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jar-plugin</artifactId>
-				<version>2.6</version>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.21.0</version>
 				<configuration>
-					<archive>
-						<manifest>
-							<addClasspath>true</addClasspath>
-							<mainClass>AllStories.kt</mainClass>
-						</manifest>
-					</archive>
+					<testSourceDirectory>${project.basedir}/src/main/kotlin</testSourceDirectory>
+					<testClassesDirectory>${project.basedir}/src/test/kotlin</testClassesDirectory>
 				</configuration>
 			</plugin>
-
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-failsafe-plugin</artifactId>
@@ -247,57 +190,39 @@
 				</executions>
 				<configuration>
 					<includes>
-						<include>**/AllStories.kt</include>
+						<include>**/*.kt</include>
 					</includes>
 				</configuration>
 			</plugin>
-
 			<plugin>
 				<groupId>org.jbehave</groupId>
 				<artifactId>jbehave-maven-plugin</artifactId>
 				<version>4.8.3</version>
 				<executions>
 					<execution>
-						<id>unpack-view-resources</id>
-						<phase>pre-integration-test</phase>
-						<goals>
-							<goal>unpack-view-resources</goal>
-						</goals>
-					</execution>
-					<execution>
 						<id>run-stories-as-embeddables</id>
 						<phase>integration-test</phase>
 						<configuration>
-							<goals>
-								<goal>run-stories-as-embeddables</goal>
-							</goals>
-							<scope>test</scope>
-							<storyTimeoutInSecs>14400</storyTimeoutInSecs>
-
 							<includes>
-								<include>**/AllStories.kt</include>
+								<include>**/*AllStories.java</include>
 							</includes>
-							<ignoreFailureInStories>false</ignoreFailureInStories>
+							<ignoreFailureInStories>true</ignoreFailureInStories>
 							<ignoreFailureInView>false</ignoreFailureInView>
 							<verboseFailures>true</verboseFailures>
 							<verboseFiltering>false</verboseFiltering>
-
-							<skip>${jbehave.skip.tests}</skip>
 							<metaFilters>
-								<metaFilter>${meta.filter}</metaFilter>
+								<metaFilter>-skip</metaFilter>
 							</metaFilters>
 							<systemProperties>
 								<property>
-									<name>file.encoding</name>
-									<value>${project.build.sourceEncoding}</value>
+									<name>java.awt.headless</name>
+									<value>true</value>
 								</property>
 							</systemProperties>
-							<ignoreFailureInStories>${ignoreFailureInStories}</ignoreFailureInStories>
-							<ignoreFailureInView>false</ignoreFailureInView>
-							<verboseFailures>true</verboseFailures>
-							<verboseFiltering>false</verboseFiltering>
-
 						</configuration>
+						<goals>
+							<goal>run-stories-as-embeddables</goal>
+						</goals>
 					</execution>
 				</executions>
 				<dependencies>
@@ -315,7 +240,5 @@
 				</dependencies>
 			</plugin>
 		</plugins>
-		</pluginManagement>
 	</build>
-
 </project>
