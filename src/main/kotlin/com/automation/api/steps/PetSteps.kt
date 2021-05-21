@@ -11,6 +11,7 @@ import org.jbehave.core.annotations.Then
 import org.jbehave.core.annotations.When
 import org.jbehave.core.steps.Steps
 import org.springframework.stereotype.Component
+import java.lang.IllegalArgumentException
 
 @Component
 class PetSteps(private val petStoreService: PetStoreService) : Steps() {
@@ -21,13 +22,17 @@ class PetSteps(private val petStoreService: PetStoreService) : Steps() {
 
     private var petId: Long = 300
 
-    private var currentPet = Pet()
+    var currentPet = Pet()
 
-    private var currentOrder = Order()
+    var currentOrder = Order()
 
 
     @Given("a \$petCategoryName named \$petName is created")
     fun createPet(petCategoryName: String, petName: String) {
+
+        if(petCategoryName.isEmpty() || petName.isEmpty())
+            throw IllegalArgumentException("Pet name/category should not be empty")
+
         petId = petId.inc()
 
         val pet = Pet()
@@ -43,7 +48,7 @@ class PetSteps(private val petStoreService: PetStoreService) : Steps() {
         currentPet = pet
     }
 
-    private fun getCategory(categoryName :String): Category {
+    fun getCategory(categoryName :String): Category {
         val category = Category()
         category.id = 1
         category.name = categoryName
@@ -55,7 +60,8 @@ class PetSteps(private val petStoreService: PetStoreService) : Steps() {
         //Petstore API sales order only has petId as a parameter so the username here its just for the semantics
 
         //Verify if there is a pet created
-        assert(currentPet.name.isNullOrEmpty()) { "Create pet before selling it" }
+        if(currentPet.name.isNullOrEmpty())
+            throw IllegalArgumentException("Create pet before selling it")
 
         orderId = orderId.inc()
 
@@ -92,7 +98,8 @@ class PetSteps(private val petStoreService: PetStoreService) : Steps() {
 
         val order = petStoreService.store.getOrderById(currentOrder.id)
 
-        assert(order.status.equals(salesOrderStatus)) { "Actual order status is ${order.status}" }
+        if(order.status.equals(salesOrderStatus))
+            throw Exception("Actual order status is ${order.status}")
     }
 
 }
