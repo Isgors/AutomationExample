@@ -1,5 +1,6 @@
 package com.automation;
 
+import com.automation.api.service.PetStoreService;
 import com.automation.api.steps.PetSteps;
 import com.automation.api.steps.UserSteps;
 import org.jbehave.core.configuration.Configuration;
@@ -37,8 +38,9 @@ public class AllStories extends JUnitStories {
     @Override
     public InjectableStepsFactory stepsFactory() {
         List<Steps> stepsFileList = new LinkedList<>();
-        stepsFileList.add(new UserSteps());
-        stepsFileList.add(new PetSteps());
+        PetStoreService petStoreService = new PetStoreService();
+        stepsFileList.add(new UserSteps(petStoreService));
+        stepsFileList.add(new PetSteps(petStoreService));
         return new InstanceStepsFactory(configuration(), stepsFileList);
     }
 
