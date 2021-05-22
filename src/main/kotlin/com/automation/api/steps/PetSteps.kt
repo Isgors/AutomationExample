@@ -98,7 +98,7 @@ class PetSteps(private val petStoreService: PetStoreService) : Steps() {
 
         val order = petStoreService.store.getOrderById(currentOrder.id)
 
-        if(order.status.equals(salesOrderStatus))
+        if(!order.status.equals(salesOrderStatus))
             throw Exception("Actual order status is ${order.status}")
     }
 
