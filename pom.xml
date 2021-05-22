@@ -88,6 +88,32 @@
 			<artifactId>selenium-java</artifactId>
 			<version>3.141.5</version>
 		</dependency>
+		<dependency>
+			<groupId>io.github.bonigarcia</groupId>
+			<artifactId>webdrivermanager</artifactId>
+			<version>3.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.seleniumhq.selenium</groupId>
+			<artifactId>selenium-chrome-driver</artifactId>
+			<version>3.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jbehave</groupId>
+			<artifactId>jbehave-spring</artifactId>
+			<version>4.8.3</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-aop</artifactId>
+			<version>4.3.12.RELEASE</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-aspects</artifactId>
+			<version>4.3.12.RELEASE</version>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -222,7 +248,7 @@
 							<verboseFailures>true</verboseFailures>
 							<verboseFiltering>false</verboseFiltering>
 							<metaFilters>
-								<metaFilter>-skip</metaFilter>
+								<metaFilter>${meta.filter}</metaFilter>
 							</metaFilters>
 							<systemProperties>
 								<property>

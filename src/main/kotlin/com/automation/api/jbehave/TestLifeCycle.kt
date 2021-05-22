@@ -1,9 +1,6 @@
 package com.automation.api.jbehave
 
 import com.automation.utils.logger
-import io.swagger.petstore.Configuration
-import io.swagger.petstore.SwaggerPetstoreClient
-import io.swagger.petstore.models.OAuthScopeEnum
 import org.jbehave.core.annotations.AfterStories
 import org.jbehave.core.annotations.BeforeScenario
 import org.jbehave.core.annotations.BeforeStories

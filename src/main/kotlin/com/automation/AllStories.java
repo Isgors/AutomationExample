@@ -1,8 +1,5 @@
 package com.automation;
 
-import com.automation.api.service.PetStoreService;
-import com.automation.api.steps.PetSteps;
-import com.automation.api.steps.UserSteps;
 import org.jbehave.core.configuration.Configuration;
 import org.jbehave.core.configuration.MostUsefulConfiguration;
 import org.jbehave.core.embedder.Embedder;
@@ -11,12 +8,12 @@ import org.jbehave.core.io.StoryFinder;
 import org.jbehave.core.junit.JUnitStories;
 import org.jbehave.core.reporters.StoryReporterBuilder;
 import org.jbehave.core.steps.InjectableStepsFactory;
-import org.jbehave.core.steps.InstanceStepsFactory;
 import org.jbehave.core.steps.ParameterConverters;
-import org.jbehave.core.steps.Steps;
+import org.jbehave.core.steps.spring.SpringStepsFactory;
 import org.junit.Ignore;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
-import java.util.LinkedList;
 import java.util.List;
 
 import static org.jbehave.core.io.CodeLocations.codeLocationFromClass;
@@ -24,6 +21,20 @@ import static org.jbehave.core.reporters.Format.CONSOLE;
 
 @Ignore
 public class AllStories extends JUnitStories {
+
+    protected ApplicationContext applicationContext;
+
+    public AllStories(){
+        applicationContext = getContextInstance();
+    }
+
+    protected ApplicationContext getContextInstance() {
+        if (applicationContext == null){
+            this.applicationContext = new AnnotationConfigApplicationContext(AutomationConfiguration.class);
+        }
+
+        return applicationContext;
+    }
 
     @Override
     public Configuration configuration() {
@@ -41,11 +52,7 @@ public class AllStories extends JUnitStories {
 
     @Override
     public InjectableStepsFactory stepsFactory() {
-        List<Steps> stepsFileList = new LinkedList<>();
-        PetStoreService petStoreService = new PetStoreService();
-        stepsFileList.add(new UserSteps(petStoreService));
-        stepsFileList.add(new PetSteps(petStoreService));
-        return new InstanceStepsFactory(configuration(), stepsFileList);
+        return new SpringStepsFactory(configuration(), getContextInstance());
     }
 
     @Override
