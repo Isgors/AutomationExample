@@ -14,6 +14,7 @@ import org.jbehave.core.steps.InjectableStepsFactory;
 import org.jbehave.core.steps.InstanceStepsFactory;
 import org.jbehave.core.steps.ParameterConverters;
 import org.jbehave.core.steps.Steps;
+import org.junit.Ignore;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -21,6 +22,7 @@ import java.util.List;
 import static org.jbehave.core.io.CodeLocations.codeLocationFromClass;
 import static org.jbehave.core.reporters.Format.CONSOLE;
 
+@Ignore
 public class AllStories extends JUnitStories {
 
     @Override
