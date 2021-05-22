@@ -3,10 +3,10 @@ package com.automation.api.steps
 import com.automation.api.service.PetStoreService
 import com.automation.utils.logger
 import io.swagger.petstore.models.User
+import org.jbehave.core.annotations.Alias
 import org.jbehave.core.annotations.Given
 import org.jbehave.core.steps.Steps
 import org.springframework.stereotype.Component
-import java.lang.IllegalArgumentException
 
 @Component
 class UserSteps(private val petStoreService: PetStoreService) : Steps() {
@@ -19,6 +19,7 @@ class UserSteps(private val petStoreService: PetStoreService) : Steps() {
 
 
     @Given("a user is created with \$name name")
+    @Alias("a user is created with <name> name")
     fun createUser(name: String) {
 
         if(name.isEmpty())

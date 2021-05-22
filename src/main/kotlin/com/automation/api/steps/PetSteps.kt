@@ -6,6 +6,7 @@ import io.swagger.petstore.models.Category
 import io.swagger.petstore.models.Order
 import io.swagger.petstore.models.Pet
 import io.swagger.petstore.models.Status1Enum
+import org.jbehave.core.annotations.Alias
 import org.jbehave.core.annotations.Given
 import org.jbehave.core.annotations.Then
 import org.jbehave.core.annotations.When
@@ -28,6 +29,7 @@ class PetSteps(private val petStoreService: PetStoreService) : Steps() {
 
 
     @Given("a \$petCategoryName named \$petName is created")
+    @Alias("a <petCategoryName> named <petName> is created")
     fun createPet(petCategoryName: String, petName: String) {
 
         if(petCategoryName.isEmpty() || petName.isEmpty())
@@ -56,6 +58,7 @@ class PetSteps(private val petStoreService: PetStoreService) : Steps() {
     }
 
     @When("the pet is sold to the \$userName user")
+    @Alias("the pet is sold to the <userName> user")
     fun sellPet(userName: String) {
         //Petstore API sales order only has petId as a parameter so the username here its just for the semantics
 
@@ -79,6 +82,7 @@ class PetSteps(private val petStoreService: PetStoreService) : Steps() {
     }
 
     @When("the pet sales order status is changed to \$salesOrderStatus")
+    @Alias("the pet sales order status is changed to <salesOrderStatus>")
     fun updatePetSalesOrderStatus(salesOrderStatus: Status1Enum) {
         //There are no PUT/update method for orders so i delete the order and create again with the new status
 
@@ -93,6 +97,7 @@ class PetSteps(private val petStoreService: PetStoreService) : Steps() {
     }
 
     @Then("the sales order status is \$salesOrderStatus")
+    @Alias("the sales order status is <salesOrderStatus>")
     fun checkPetSalesOrderStatus(salesOrderStatus: Status1Enum) {
         log.info("Check if pet sales order status is $salesOrderStatus")
 
