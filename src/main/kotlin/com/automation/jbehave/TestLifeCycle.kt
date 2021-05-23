@@ -1,4 +1,4 @@
-package com.automation.api.jbehave
+package com.automation.jbehave
 
 import com.automation.utils.logger
 import org.jbehave.core.annotations.AfterStories

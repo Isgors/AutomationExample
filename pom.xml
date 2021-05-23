@@ -18,13 +18,27 @@
 	<properties>
 		<java.version>11</java.version>
 		<kotlin.version>1.5.0</kotlin.version>
-
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-
 		<ignoreFailureInStories>true</ignoreFailureInStories>
 		<jbehave.skip.tests>false</jbehave.skip.tests>
 		<meta.filter>!skip</meta.filter>
+		<browserType>CHROME</browserType>
 	</properties>
+
+	<profiles>
+		<profile>
+			<id>browsertype</id>
+			<activation>
+				<property>
+					<name>browser.type</name>
+				</property>
+			</activation>
+			<properties>
+				<!-- Override only if necessary -->
+				<browserType>${browser.type}</browserType>
+			</properties>
+		</profile>
+	</profiles>
 
 	<dependencies>
 		<dependency>
@@ -96,7 +110,7 @@
 		<dependency>
 			<groupId>org.seleniumhq.selenium</groupId>
 			<artifactId>selenium-chrome-driver</artifactId>
-			<version>3.0.0</version>
+			<version>3.141.5</version>
 		</dependency>
 		<dependency>
 			<groupId>org.jbehave</groupId>
@@ -211,6 +225,22 @@
 					<testSourceDirectory>${project.basedir}/src/main/kotlin</testSourceDirectory>
 					<testClassesDirectory>${project.basedir}/src/test/kotlin</testClassesDirectory>
 				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>properties-maven-plugin</artifactId>
+				<version>1.0.0</version>
+				<executions>
+					<execution>
+						<phase>generate-resources</phase>
+						<goals>
+							<goal>write-project-properties</goal>
+						</goals>
+						<configuration>
+							<outputFile>${project.build.outputDirectory}/my.properties</outputFile>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>

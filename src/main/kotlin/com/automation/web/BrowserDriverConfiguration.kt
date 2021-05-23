@@ -6,36 +6,35 @@ import org.openqa.selenium.WebDriver
 import org.openqa.selenium.chrome.ChromeDriver
 import org.openqa.selenium.chrome.ChromeOptions
 import org.springframework.beans.factory.annotation.Value
-import org.springframework.context.annotation.Configuration
 import org.springframework.stereotype.Component
+import java.util.*
 
 
 @Component
 class BrowserDriverConfiguration {
 
-    @Value("\${browser:CHROME}")
-    private lateinit var browserType : DriverManagerType
+    @Value("\${browserType}")
+    private lateinit var browserType : String
 
     val driver: WebDriver
         get(){
+
+            val inputStream = Thread.currentThread().contextClassLoader.getResourceAsStream("my.properties")
+            val properties = Properties()
+            properties.load(inputStream)
+            browserType = properties.getProperty("browserType")
+
                 return when(browserType){
-                    DriverManagerType.CHROME -> configureChromeDriver()
+                    "CHROME" -> configureChromeDriver()
                     else -> throw NotImplementedError("$browserType not implemented yet")
                 }
             }
 
-//    init {
-//        driver = configureChromeDriver()
-//        driver = when(browserType){
-//            DriverManagerType.CHROME -> configureChromeDriver()
-//            else -> throw NotImplementedError("$browserType not implemented yet")
-//        }
-//    }
-
-    //val CHROME_BROWSER_VERSION = "90.0.4430.212"
-
     private fun configureChromeDriver() : ChromeDriver {
-        WebDriverManager.getInstance(DriverManagerType.CHROME).setup();
+        val driverManager = WebDriverManager.getInstance(DriverManagerType.CHROME)
+        driverManager.version("90.0.4430.24")
+        driverManager.setup()
+
         val options = ChromeOptions()
         options.addArguments("start-maximized")
         options.addArguments("enable-automation")
@@ -44,7 +43,8 @@ class BrowserDriverConfiguration {
         options.addArguments("--disable-dev-shm-usage")
         options.addArguments("--disable-browser-side-navigation")
         options.addArguments("--disable-gpu")
-        return ChromeDriver()
+
+        return ChromeDriver(options)
     }
 
 }
