@@ -54,16 +54,22 @@ class PetzSiteSteps (private val petzSiteComponent : PetzSiteComponent) : Steps(
 
     @When("save product info")
     fun saveProductInfo() {
+        petzSiteComponent.waitUntilElementIsVisible(ProductPageXPath.PRODUCT_NAME.xpath)
+
         currentProduct.name = petzSiteComponent.getElementValue(ProductPageXPath.PRODUCT_NAME.xpath)
         currentProduct.price = petzSiteComponent.getElementValue(ProductPageXPath.PRODUCT_PRICE.xpath)
         currentProduct.subscriberPrice = petzSiteComponent.getElementValue(ProductPageXPath.PRODUCT_SUBSCRIBER_PRICE.xpath)
+
         petzSiteComponent.takeScreenshot("4 - Product info saved")
 
     }
 
     @When("the user add the product to the shopping cart")
     fun addProductToShoppingCart() {
+        petzSiteComponent.waitUntilElementIsVisible(ProductPageXPath.BTN_ADD_TO_CART.xpath)
+
         petzSiteComponent.clickElement(ProductPageXPath.BTN_ADD_TO_CART.xpath)
+
         petzSiteComponent.takeScreenshot("5 - User add the product to the shopping cart")
     }
 
