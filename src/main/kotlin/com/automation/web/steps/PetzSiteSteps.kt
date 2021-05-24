@@ -5,6 +5,7 @@ import com.automation.web.model.Product
 import com.automation.web.pages.PetzSiteComponent
 import com.automation.web.xpath.ProductPageXPath
 import com.automation.web.xpath.ShoppingCartPageXPath
+import org.jbehave.core.annotations.Alias
 import org.jbehave.core.annotations.Given
 import org.jbehave.core.annotations.Then
 import org.jbehave.core.annotations.When
@@ -35,6 +36,7 @@ class PetzSiteSteps (private val petzSiteComponent : PetzSiteComponent) : Steps(
     }
 
     @Given("the user search for \$value")
+    @Alias("the user search for <value>")
     fun searchFor(value: String) {
         petzSiteComponent.searchFor(value)
         Thread.sleep(1000)
@@ -76,8 +78,12 @@ class PetzSiteSteps (private val petzSiteComponent : PetzSiteComponent) : Steps(
         product.price = petzSiteComponent.getElementValue(ShoppingCartPageXPath.PRODUCT_PRICE.xpath)
         product.subscriberPrice = currentProduct.subscriberPrice
 
-        if(currentProduct != product)
-            throw IllegalStateException("Product info does not match %n current product: $currentProduct %n actual product: $product")
+        if(currentProduct != product){
+            petzSiteComponent.endSession()
+
+            throw IllegalStateException("Product info does not match | current product: $currentProduct | actual product: $product")
+        }
+
     }
 
     @Then("product total price is correct")
@@ -85,9 +91,16 @@ class PetzSiteSteps (private val petzSiteComponent : PetzSiteComponent) : Steps(
 
         val totalPrice = petzSiteComponent.getElementValue(ShoppingCartPageXPath.PRODUCT_TOTAL_PRICE.xpath)
 
-        if(totalPrice != currentProduct.price)
+        if(totalPrice != currentProduct.price){
+            petzSiteComponent.endSession()
+
             throw IllegalStateException("Expected total price is ${currentProduct.price} but actual total price is $totalPrice")
+        }
 
     }
+
+    @Then("the user ends the current session")
+    fun closeBrowser() = petzSiteComponent.endSession()
+
 
 }

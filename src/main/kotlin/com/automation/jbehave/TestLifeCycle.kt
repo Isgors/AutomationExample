@@ -15,19 +15,23 @@ class TestLifeCycle {
     private val log = logger()
 
     @BeforeStories
-    fun beforeStories() {
-        log.info("Before stories..")
+    fun beforeStories() = log.info("Before stories..")
+
+
+    @BeforeScenario (uponType = ScenarioType.NORMAL)
+    fun beforeNormalScenario() {
+        log.info("Before Normal Scenario..")
         FileService().createDirectory("target", "log")
     }
 
-    @BeforeScenario (uponType = ScenarioType.NORMAL)
-    fun beforeNormalScenario() = log.info("Before Normal Scenario..")
-
-    @BeforeScenario (uponType = ScenarioType.EXAMPLE)
-    fun beforeExampleScenario() = log.info("Before Example Scenario..")
-
     @AfterStories
     fun afterStories() = log.info("After Stories..")
+
+    @BeforeScenario (uponType = ScenarioType.EXAMPLE)
+    fun beforeExampleScenario() {
+        log.info("Before Example Scenario..")
+        FileService().createDirectory("target", "log")
+    }
 
     @AfterScenario (uponType = ScenarioType.NORMAL)
     fun afterNormalScenario() {

@@ -26,6 +26,8 @@ class PetzSiteComponent {
         driver = BrowserDriverConfiguration().driver
     }
 
+    fun endSession() = driver.quit()
+
     fun accessUrl(url: String) = driver[url]
 
     fun searchFor(value: String) {
