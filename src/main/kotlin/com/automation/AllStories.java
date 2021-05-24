@@ -5,7 +5,6 @@ import org.jbehave.core.configuration.Configuration;
 import org.jbehave.core.configuration.MostUsefulConfiguration;
 import org.jbehave.core.embedder.Embedder;
 import org.jbehave.core.embedder.StoryControls;
-import org.jbehave.core.io.LoadFromClasspath;
 import org.jbehave.core.io.StoryFinder;
 import org.jbehave.core.junit.JUnitStories;
 import org.jbehave.core.reporters.Format;
@@ -21,10 +20,8 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Properties;
 
 import static org.jbehave.core.io.CodeLocations.codeLocationFromClass;
-import static org.jbehave.core.reporters.Format.CONSOLE;
 
 @Ignore
 public class AllStories extends JUnitStories {

@@ -326,8 +326,6 @@
 							<goal>unpack</goal>
 						</goals>
 						<configuration>
-							<overwriteReleases>false</overwriteReleases>
-							<overwriteSnapshots>true</overwriteSnapshots>
 							<artifactItems>
 								<artifactItem>
 									<groupId>org.jbehave.site</groupId>
@@ -346,8 +344,6 @@
 							<goal>unpack</goal>
 						</goals>
 						<configuration>
-							<overwriteReleases>false</overwriteReleases>
-							<overwriteSnapshots>true</overwriteSnapshots>
 							<artifactItems>
 								<artifactItem>
 									<groupId>org.jbehave</groupId>
