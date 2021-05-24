@@ -107,8 +107,8 @@ class LoggingStoryReporter : NullStoryReporter() {
 
     override fun failed(step: String?, cause: Throwable) {
         runningStoryStatus.set(false)
-        var exceptionClass: String?
-        var exceptionMessage: String?
+        val exceptionClass: String?
+        val exceptionMessage: String?
         if (cause is UUIDExceptionWrapper) {
             exceptionClass = cause.cause!!.javaClass.name
             exceptionMessage = cause.cause!!.message
