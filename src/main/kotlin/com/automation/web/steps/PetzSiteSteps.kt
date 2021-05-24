@@ -31,12 +31,14 @@ class PetzSiteSteps (private val petzSiteComponent : PetzSiteComponent) : Steps(
     fun accessPetzHomePage() {
         log.info("Accessing petz home page..")
         petzSiteComponent.accessUrl(HOME_PAGE_URL)
+        petzSiteComponent.takeScreenshot("1 - Accessing petz home page")
     }
 
     @Given("the user search for \$value")
     fun searchFor(value: String) {
         petzSiteComponent.searchFor(value)
         Thread.sleep(1000)
+        petzSiteComponent.takeScreenshot("2 - User search for $value")
     }
 
     @When("the user select the \$value element")
@@ -45,6 +47,7 @@ class PetzSiteSteps (private val petzSiteComponent : PetzSiteComponent) : Steps(
             petzSiteComponent.pressKey(Keys.DOWN)
         }
         petzSiteComponent.pressKey(Keys.ENTER)
+        petzSiteComponent.takeScreenshot("3 - User select $value")
     }
 
     @When("save product info")
@@ -52,16 +55,22 @@ class PetzSiteSteps (private val petzSiteComponent : PetzSiteComponent) : Steps(
         currentProduct.name = petzSiteComponent.getElementValue(ProductPageXPath.PRODUCT_NAME.xpath)
         currentProduct.price = petzSiteComponent.getElementValue(ProductPageXPath.PRODUCT_PRICE.xpath)
         currentProduct.subscriberPrice = petzSiteComponent.getElementValue(ProductPageXPath.PRODUCT_SUBSCRIBER_PRICE.xpath)
+        petzSiteComponent.takeScreenshot("4 - Product info saved")
+
     }
 
     @When("the user add the product to the shopping cart")
     fun addProductToShoppingCart() {
         petzSiteComponent.clickElement(ProductPageXPath.BTN_ADD_TO_CART.xpath)
+        petzSiteComponent.takeScreenshot("5 - User add the product to the shopping cart")
     }
 
     @Then("the product info remain the same")
     fun validateProductInfo() {
         petzSiteComponent.waitUntilElementIsVisible(ShoppingCartPageXPath.PRODUCT_NAME.xpath)
+
+        petzSiteComponent.takeScreenshot("6 - Product info shopping cart validation")
+
         val product = Product()
         product.name = petzSiteComponent.getElementValue(ShoppingCartPageXPath.PRODUCT_NAME.xpath)
         product.price = petzSiteComponent.getElementValue(ShoppingCartPageXPath.PRODUCT_PRICE.xpath)
@@ -69,7 +78,6 @@ class PetzSiteSteps (private val petzSiteComponent : PetzSiteComponent) : Steps(
 
         if(currentProduct != product)
             throw IllegalStateException("Product info does not match %n current product: $currentProduct %n actual product: $product")
-
     }
 
     @Then("product total price is correct")
