@@ -21,6 +21,7 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Properties;
 
 import static org.jbehave.core.io.CodeLocations.codeLocationFromClass;
 import static org.jbehave.core.reporters.Format.CONSOLE;
@@ -81,7 +82,6 @@ public class AllStories extends JUnitStories {
 
     protected StoryReporterBuilder getStoryReporterBuilder() {
         return new StoryReporterBuilder()
-                .withDefaultFormats()
                 .withReporters(getReporters())
                 .withFailureTrace(true)
                 .withFormats( Format.CONSOLE, Format.STATS, Format.HTML )
@@ -92,7 +92,6 @@ public class AllStories extends JUnitStories {
 
         List<StoryReporter> reporters = new LinkedList<>();
         reporters.add(new LoggingStoryReporter());
-
 
         return reporters.toArray(new StoryReporter[reporters.size()]);
     }
